@@ -7,12 +7,19 @@ import reportWebVitals from './reportWebVitals';
 import axios from 'axios';
 import reducers from './redux/reducers';
 import {Provider} from 'react-redux';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
+import rootSaga from './redux/sagas'
+import createSagaMiddleware from 'redux-saga';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://rem-rest-api.herokuapp.com/api";
 
-const store = createStore(reducers);
+const SagaMiddleware = createSagaMiddleware()
+
+const store = createStore(reducers, applyMiddleware(SagaMiddleware));
+
+SagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
