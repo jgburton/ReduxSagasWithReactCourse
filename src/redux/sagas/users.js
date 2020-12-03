@@ -9,7 +9,7 @@ function* getUsers() {
         // console.log(result);
         yield put(actions.getUsersSuccess({ items: result.data.data }));
     } catch (e) {
-
+        console.log(e);
     }
 }
 
