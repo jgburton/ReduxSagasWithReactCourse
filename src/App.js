@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUsersRequest, createUserRequest } from './redux/actions/users';
+import { getUsersRequest, createUserRequest, deleteUserRequest } from './redux/actions/users';
 import UsersList from './components/UsersList';
 import NewUserForm from './components/NewUserForm';
 
@@ -12,11 +12,15 @@ class App extends React.Component {
   }
 
   handleSubmit = ({ firstName, lastName }) => {
-    // console.log(firstName, lastName);
     this.props.createUserRequest({
       firstName,
       lastName
     });
+  }
+
+  handleDeleteUserClick = (userId) => {
+    //call delete user request redux action
+    this.props.deleteUserRequest(userId);
   }
 
   render() {
@@ -24,7 +28,7 @@ class App extends React.Component {
     return (
       <div style={{ margin: '0 auto', padding: '20px', maxWidth: '600px' }}>
         <NewUserForm onSubmit={this.handleSubmit} />
-        <UsersList users={users.items} />
+        <UsersList onDeleteUser={this.handleDeleteUserClick} users={users.items} />
       </div>
     );
   }
@@ -33,5 +37,6 @@ class App extends React.Component {
 
 export default connect(({ users }) => ({ users }), {
   getUsersRequest,
-  createUserRequest
+  createUserRequest,
+  deleteUserRequest
 })(App);
