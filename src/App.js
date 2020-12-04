@@ -1,9 +1,10 @@
 import './App.css';
 import React from 'react';
 import { connect } from 'react-redux';
-import { getUsersRequest, createUserRequest, deleteUserRequest } from './redux/actions/users';
+import { getUsersRequest, createUserRequest, deleteUserRequest, usersError } from './redux/actions/users';
 import UsersList from './components/UsersList';
 import NewUserForm from './components/NewUserForm';
+import { Alert } from 'reactstrap';
 
 class App extends React.Component {
   constructor(props) {
@@ -17,16 +18,23 @@ class App extends React.Component {
       lastName
     });
   }
-
   handleDeleteUserClick = (userId) => {
     //call delete user request redux action
     this.props.deleteUserRequest(userId);
+  }
+  handleCloseAlert = () => {
+    this.props.usersError({
+      error: ''
+    })
   }
 
   render() {
     const users = this.props.users;
     return (
       <div style={{ margin: '0 auto', padding: '20px', maxWidth: '600px' }}>
+        <Alert color="danger" isOpen={!!this.props.users.error} toggle={this.handleCloseAlert}>
+          {this.props.users.error}
+        </Alert>
         <NewUserForm onSubmit={this.handleSubmit} />
         <UsersList onDeleteUser={this.handleDeleteUserClick} users={users.items} />
       </div>
@@ -38,5 +46,6 @@ class App extends React.Component {
 export default connect(({ users }) => ({ users }), {
   getUsersRequest,
   createUserRequest,
-  deleteUserRequest
+  deleteUserRequest,
+  usersError
 })(App);
